@@ -1,8 +1,13 @@
-import { Input } from './src/util/Input';
+import { Input } from './src/util/Input'
+import { Jogo } from './src/model/Jogo'
 
 export function main() {
 
     let opcao: number
+
+    // testes
+    const jogoTeste = new Jogo(1, "The Legend of Zelda", 1, 300.00, "Nintendo", "Ação/Aventura")
+    jogoTeste.visualizar()
 
     while (true) {
 
