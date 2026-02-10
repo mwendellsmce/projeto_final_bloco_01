@@ -4,7 +4,7 @@ export interface ProdutoRepository {
 
     // metodos de crud
     procurarPorId(id: number): void;
-    listarTodas(): void;
+    listarTodos(): void;
     cadastrar(produto: Produto): void;
     atualizar(produto: Produto): void;
     deletar(id: number): void;
