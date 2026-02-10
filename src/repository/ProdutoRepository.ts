@@ -7,6 +7,5 @@ export interface ProdutoRepository {
     listarTodos(): void;
     cadastrar(produto: Produto): void;
     atualizar(produto: Produto): void;
-    deletar(id: number): void;
-    
+    deletar(id: number): void;    
 }
