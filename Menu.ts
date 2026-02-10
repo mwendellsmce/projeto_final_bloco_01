@@ -85,16 +85,29 @@ function listarProdutoPorId(): void {
 function cadastrarProduto(): void {
     let nome: string, tipo: number, preco: number, marca: string, genero: string
 
-    console.log('Digite o Nome do Produto: ')
+    // opção de cancelar
+    console.log('Digite o Nome do Produto (ou Pressione ENTER para cancelar): ')
     nome = Input.question('')
+
+    if (nome === '') {
+        console.log('\nOperação de Cadastro Cancelada!')
+        return // sai da função e volta pro menu
+    }
 
     do {
         console.log('Digite o Tipo do Produto (1-Jogo): ')
         tipo = Input.questionInt('')
     } while (tipo !== 1)
 
-    console.log('Digite o Preço do Produto: ')
-    preco = Input.questionFloat('')
+    // impedir preço negativo
+    do {
+        console.log('Digite o Preço do Produto: ')
+        preco = Input.questionFloat('')
+        
+        if (preco < 0) {
+            console.log('O preço deve ser um valor positivo! Tente novamente.')
+        }
+    } while (preco < 0)
 
     console.log('Digite a Marca do Produto: ')
     marca = Input.question('')
@@ -103,6 +116,7 @@ function cadastrarProduto(): void {
         case 1:
             console.log('Digite o Gênero do Jogo: ')
             genero = Input.question('')
+            
             produtos.cadastrar(new Jogo(0, nome, tipo, preco, marca, genero))
             break
     }
@@ -111,31 +125,51 @@ function cadastrarProduto(): void {
 function atualizarProduto(): void {
     console.log('Digite o ID do Produto: ')
     const id = Input.questionInt('')
-    
-    let produtoExistente = produtos.buscarNoArray(id)
 
-    if (produtoExistente !== null) {
+    // busca o produto
+    let produto = produtos.buscarNoArray(id)
+
+    if (produto !== null) {
         let nome: string, tipo: number, preco: number, marca: string, genero: string
-        
-        
-        console.log('Digite o Nome do Produto: ')
-        nome = Input.question('')
-        
-        tipo = produtoExistente.tipo
+        let entrada: string
 
-        console.log('Digite o Preço do Produto: ')
-        preco = Input.questionFloat('')
-        
-        console.log('Digite a Marca do Produto: ')
-        marca = Input.question('')
+        // nome
+        console.log(`\nNome atual: ${produto.nome}`)
+        console.log('Digite o Novo Nome (ou Pressione ENTER para manter): ')
+        entrada = Input.question('')
+        // se não digitar nada mantém o original
+        nome = entrada.trim() === '' ? produto.nome : entrada
 
+        // não vamos alterar o tipo por compatibildiade 
+        tipo = produto.tipo
+
+        // preco
+        console.log(`\nPreço atual: ${produto.preco}`)
+        console.log('Digite o Novo Preço (ou Pressione ENTER para manter): ')
+        entrada = Input.question('')
+        // Converte vírgula para ponto e transforma em número
+        preco = entrada.trim() === '' ? produto.preco : parseFloat(entrada.replace(',', '.'))
+
+        // marca
+        console.log(`\nMarca atual: ${produto.marca}`)
+        console.log('Digite a Nova Marca (ou Pressione ENTER para manter): ')
+        entrada = Input.question('')
+        marca = entrada.trim() === '' ? produto.marca : entrada
+
+        // dados extras de cada produto
         switch (tipo) {
-            case 1:
-                console.log('Digite o Gênero do Jogo: ')
-                genero = Input.question('')
+            case 1: // Jogo
+                let jogo = produto as Jogo 
+                
+                console.log(`\nGênero atual: ${jogo.genero}`)
+                console.log('Digite o Novo Gênero (ou Pressione ENTER para manter): ')
+                entrada = Input.question('')
+                genero = entrada.trim() === '' ? jogo.genero : entrada
+
                 produtos.atualizar(new Jogo(id, nome, tipo, preco, marca, genero))
                 break
         }
+        
     } else {
         console.log(`Produto com ID ${id} não encontrado!`)
     }
